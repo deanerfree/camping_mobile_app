@@ -17,12 +17,32 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kurtiscoding.geolocation",
+      "infoPlist": {
+        "location": [
+          "location",
+          "fetch"
+        ],
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
     },
     "android": {
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.kurtiscoding.geolocation",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAFhE6dztVj68gttdkxAMga1H9W_oCc8tc"
+        }
       }
     },
     "web": {
