@@ -12,7 +12,7 @@ export const SLIDER_WIDTH = Dimensions.get("window").width + 80
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
 const CampgroundTile = ({ ...data }) => {
 	const { item } = data
-
+	// console.log(item)
 	return (
 		<View style={styles.container}>
 			<Image source={{ uri: item.images[0].url }} style={styles.image} />

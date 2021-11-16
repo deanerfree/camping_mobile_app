@@ -6,6 +6,7 @@ import MapView, {
 	PROVIDER_DEFAULT,
 } from "react-native-maps"
 import * as Location from "expo-location"
+import { getParkNames } from "../functions/functions"
 import MarkerList from "./MarkerList"
 import Carousel, { Pagination } from "react-native-snap-carousel"
 import { SLIDER_WIDTH, ITEM_WIDTH } from "./Carousel/CampgroundTile"
@@ -13,11 +14,11 @@ import CampgroundTile from "./Carousel/CampgroundTile"
 let deviceWidth = Dimensions.get("window").width
 let deviceHeight = Dimensions.get("window").height
 
-const UserMap = ({ campgroundData, ...props }) => {
+const UserMap = ({ campgroundData, nationalParkData, ...props }) => {
 	const isCarousel = useRef(null)
 	const mapRef = useRef(null)
 	const { northMax, southMax, eastMax, westMax } = props
-
+	const [parkNames, setParkNames] = useState([])
 	const aspectRatio = deviceWidth / deviceHeight
 	const latitudeDelta = (northMax - southMax) / aspectRatio
 	const longitudeDelta = latitudeDelta * aspectRatio
@@ -56,6 +57,8 @@ const UserMap = ({ campgroundData, ...props }) => {
 	}
 
 	useEffect(() => {
+		const listOfParkNames = getParkNames(campgroundData)
+		setParkNames(listOfParkNames)
 		//Have to move this to a button to decide to show location
 		getLocation()
 	}, [lat, long])
@@ -65,6 +68,17 @@ const UserMap = ({ campgroundData, ...props }) => {
 	}
 	if (campgroundData) {
 		text = JSON.stringify(yourPosition)
+	}
+
+	const animateToPark = (index) => {
+		console.log(nationalParkData[index])
+		let location = nationalParkData[index]
+		mapRef.current.animateToRegion({
+			latitude: location.latitude,
+			longitude: location.longitude,
+			latitudeDelta: 0.75,
+			longitudeDelta: 1.35,
+		})
 	}
 
 	return (
@@ -88,7 +102,7 @@ const UserMap = ({ campgroundData, ...props }) => {
 						pinColor='blue'
 					/>
 				) : null}
-				{campgroundData && lat && long ? (
+				{campgroundData ? (
 					<>
 						<MarkerList campgroundData={campgroundData} />
 					</>
@@ -97,22 +111,20 @@ const UserMap = ({ campgroundData, ...props }) => {
 				)}
 			</MapView>
 			{campgroundData ? (
-				<View
-					style={styles.container}
-					onPress={() => {
-						console.log("hello")
-					}}>
+				<View style={styles.container}>
 					<Carousel
 						layout={"default"}
 						layoutCardOffset={9}
 						containerCustomStyle={styles.carousel}
 						ref={isCarousel}
-						data={campgroundData}
+						data={nationalParkData}
 						renderItem={CampgroundTile}
 						sliderWidth={SLIDER_WIDTH}
 						itemWidth={ITEM_WIDTH}
 						inactiveSlideShift={0}
 						useScrollView={true}
+						removeClippedSubviews={false}
+						onSnapToItem={(index) => animateToPark(index)}
 					/>
 				</View>
 			) : (

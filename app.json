@@ -38,12 +38,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.kurtiscoding.geolocation",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyAFhE6dztVj68gttdkxAMga1H9W_oCc8tc"
-        }
-      }
+      "package": "com.kurtiscoding.geolocation"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -4,11 +4,16 @@ import { StyleSheet, Text, View, StatusBar, Dimensions } from "react-native"
 import UserMap from "./Screens/UserMap"
 import Header from "./Screens/Header"
 import Footer from "./Screens/Footer"
-import { getLatitude, getLongitude } from "./functions/functions"
+import {
+	getLatitude,
+	getLongitude,
+	// getListOfEachPark,
+} from "./functions/functions"
 let deviceWidth = Dimensions.get("window").width
 let deviceHeight = Dimensions.get("window").height
 const App = () => {
 	const [campgroundData, setCampgroundData] = useState([])
+	const [nationalParkData, setNationalParkData] = useState([])
 	const [eastMax, setEastMax] = useState(0)
 	const [westMax, setWestMax] = useState(0)
 	const [northMax, setNorthMax] = useState(0)
@@ -25,14 +30,17 @@ const App = () => {
 			const importedCampgroundData = await axios(url)
 
 			if (importedCampgroundData.status === 200) {
-				setCampgroundData(importedCampgroundData.data.cleanedMapData)
-				let diffLat = getLatitude(importedCampgroundData.data.cleanedMapData)
-				let diffLong = getLongitude(importedCampgroundData.data.cleanedMapData)
+				const parkList = importedCampgroundData.data.organizedMapData
 
-				setNorthMax(diffLat.max)
-				setSouthMax(diffLat.min)
-				setWestMax(diffLong.max)
-				setEastMax(diffLong.min)
+				// console.log(parkList)r
+				setCampgroundData(parkList[0])
+				// let diffLat = getLatitude(importedCampgroundData.data.cleanedMapData)
+				// let diffLong = getLongitude(importedCampgroundData.data.cleanedMapData)
+
+				setNorthMax(parkList[1].max)
+				setSouthMax(parkList[1].min)
+				setWestMax(parkList[2].max)
+				setEastMax(parkList[2].min)
 
 				setIsLoading(false)
 				return
@@ -44,8 +52,32 @@ const App = () => {
 		}
 	}
 
+	const getNationalParks = async () => {
+		setIsLoading(true)
+		const url = "http://localhost:4001/api/v1/parkLocations"
+
+		try {
+			setIsLoading(true)
+			const nationalParkData = await axios(url)
+
+			if (nationalParkData.status === 200) {
+				const parkList = nationalParkData.data.filteredData
+				// console.log(parkList)
+				setNationalParkData(parkList)
+				// console.log(parkList)r
+
+				setIsLoading(false)
+				return
+			}
+		} catch (error) {
+			setErrorFlag(true)
+			setIsLoading(false)
+			console.error("not loading" + error)
+		}
+	}
 	useEffect(() => {
 		getCampgrounds()
+		getNationalParks()
 	}, [])
 
 	return (
@@ -65,6 +97,7 @@ const App = () => {
 					Math.abs(westMax) > 0 ? (
 						<UserMap
 							campgroundData={campgroundData}
+							nationalParkData={nationalParkData}
 							northMax={northMax}
 							southMax={southMax}
 							westMax={westMax}
