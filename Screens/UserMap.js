@@ -6,7 +6,6 @@ import MapView, {
 	PROVIDER_DEFAULT,
 } from "react-native-maps"
 import * as Location from "expo-location"
-import { getParkNames } from "../functions/functions"
 import MarkerList from "./MarkerList"
 import Carousel, { Pagination } from "react-native-snap-carousel"
 import { SLIDER_WIDTH, ITEM_WIDTH } from "./Carousel/CampgroundTile"
@@ -18,25 +17,27 @@ const UserMap = ({ campgroundData, nationalParkData, ...props }) => {
 	const isCarousel = useRef(null)
 	const mapRef = useRef(null)
 	const { northMax, southMax, eastMax, westMax } = props
-	const [parkNames, setParkNames] = useState([])
+
 	const aspectRatio = deviceWidth / deviceHeight
 	const latitudeDelta = (northMax - southMax) / aspectRatio
 	const longitudeDelta = latitudeDelta * aspectRatio
 	const latMidPoint = (northMax + southMax) / 2
 	const longMidPoint = (eastMax + westMax) / 2
+	const initialRegion = {
+		latitude: latMidPoint,
+		longitude: longMidPoint,
+		latitudeDelta: latDelta,
+		longitudeDelta: longDelta,
+	}
 	let text = "Waiting..."
 	const [errorMsg, setErrorMsg] = useState()
-	const [location, setLocation] = useState()
 	const [lat, setLat] = useState()
 	const [long, setLong] = useState()
 	const [displayUser, setDisplayUser] = useState(true)
 	const [latDelta, setLatDelta] = useState(latitudeDelta)
 	const [longDelta, setLongDelta] = useState(longitudeDelta)
 	const [yourPosition, setYourPosition] = useState()
-	const [midpoint, setMidpoint] = useState({
-		midLat: latMidPoint,
-		midLong: longMidPoint,
-	})
+	const [region, setRegion] = useState(initialRegion)
 
 	//Determines the user's current location
 	const getLocation = async () => {
@@ -57,8 +58,6 @@ const UserMap = ({ campgroundData, nationalParkData, ...props }) => {
 	}
 
 	useEffect(() => {
-		const listOfParkNames = getParkNames(campgroundData)
-		setParkNames(listOfParkNames)
 		//Have to move this to a button to decide to show location
 		getLocation()
 	}, [lat, long])
@@ -71,7 +70,7 @@ const UserMap = ({ campgroundData, nationalParkData, ...props }) => {
 	}
 
 	const animateToPark = (index) => {
-		console.log(nationalParkData[index])
+		// console.log(nationalParkData[index])
 		let location = nationalParkData[index]
 		mapRef.current.animateToRegion({
 			latitude: location.latitude,

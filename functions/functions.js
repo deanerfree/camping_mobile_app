@@ -4,6 +4,7 @@ export const getLatitude = (dataList) => {
 	let latitudeList = []
 
 	dataList.forEach((dataPoint) => {
+		// console.log("what", dataPoint)
 		if (dataPoint.latitude === undefined) {
 			return
 		}

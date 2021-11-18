@@ -3,21 +3,21 @@ import { Text, View } from "react-native"
 import { Marker } from "react-native-maps"
 
 const MarkerList = ({ campgroundData }) => {
-	let keys = Object.keys(campgroundData)
-	// console.log("keys", campgroundData.chis[0])r
+	// let keys = Object.keys(campgroundData)
+	// console.log("keys", campgroundData[0].campground[0].name)
 	return (
 		<>
-			{keys.map((park) => {
-				return campgroundData[park].map((campground, index) => {
+			{campgroundData.map((park, index) => {
+				return park.campground.map((camp) => {
 					return (
 						<Marker
-							key={index}
+							key={camp.id}
 							coordinate={{
-								latitude: campground.coordinates.latitude,
-								longitude: campground.coordinates.longitude,
+								latitude: camp.latitude,
+								longitude: camp.longitude,
 							}}
-							title={campground.name}
-							description={campground.description}
+							title={camp.name}
+							description={camp.description}
 						/>
 						// <View key={index}>
 						// 	<Text>Hey</Text>

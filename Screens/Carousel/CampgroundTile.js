@@ -7,22 +7,28 @@ import {
 	Text,
 	Dimensions,
 } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import TileItem from "./TileItem"
 
 export const SLIDER_WIDTH = Dimensions.get("window").width + 80
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
 const CampgroundTile = ({ ...data }) => {
-	const { item } = data
+	const { images, name, description, campground } = data.item
 	// console.log(item)
 	return (
-		<View style={styles.container}>
-			<Image source={{ uri: item.images[0].url }} style={styles.image} />
+		<TouchableOpacity style={styles.container}>
+			<Image source={{ uri: images[0].url }} style={styles.image} />
 
-			<Text style={styles.header}>{item.name}</Text>
+			<Text style={styles.header}>{name}</Text>
 
 			<ScrollView style={styles.scrollBody}>
-				<Text style={styles.body}>{item.description}</Text>
+				<Text style={styles.body}>{description}</Text>
+				<Text>Campgrounds:</Text>
+				{campground.map((campground) => {
+					return <TileItem key={campground.id} campground={campground} />
+				})}
 			</ScrollView>
-		</View>
+		</TouchableOpacity>
 	)
 }
 

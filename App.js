@@ -4,11 +4,7 @@ import { StyleSheet, Text, View, StatusBar, Dimensions } from "react-native"
 import UserMap from "./Screens/UserMap"
 import Header from "./Screens/Header"
 import Footer from "./Screens/Footer"
-import {
-	getLatitude,
-	getLongitude,
-	// getListOfEachPark,
-} from "./functions/functions"
+
 let deviceWidth = Dimensions.get("window").width
 let deviceHeight = Dimensions.get("window").height
 const App = () => {
@@ -20,52 +16,49 @@ const App = () => {
 	const [southMax, setSouthMax] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 	const [hasError, setErrorFlag] = useState(false)
-
-	const getCampgrounds = async () => {
-		// const url = "http://127.0.0.1:4001/api/v1/mapItems"
-		const url = "http://localhost:4001/api/v1/mapItems"
-
-		try {
-			setIsLoading(true)
-			const importedCampgroundData = await axios(url)
-
-			if (importedCampgroundData.status === 200) {
-				const parkList = importedCampgroundData.data.organizedMapData
-
-				// console.log(parkList)r
-				setCampgroundData(parkList[0])
-				// let diffLat = getLatitude(importedCampgroundData.data.cleanedMapData)
-				// let diffLong = getLongitude(importedCampgroundData.data.cleanedMapData)
-
-				setNorthMax(parkList[1].max)
-				setSouthMax(parkList[1].min)
-				setWestMax(parkList[2].max)
-				setEastMax(parkList[2].min)
-
-				setIsLoading(false)
-				return
-			}
-		} catch (error) {
-			setErrorFlag(true)
-			setIsLoading(false)
-			console.error("not loading" + error)
-		}
-	}
+	const [message, setMessage] = useState("")
 
 	const getNationalParks = async () => {
 		setIsLoading(true)
 		const url = "http://localhost:4001/api/v1/parkLocations"
 
 		try {
-			setIsLoading(true)
+			// setIsLoading(true)
 			const nationalParkData = await axios(url)
 
 			if (nationalParkData.status === 200) {
 				const parkList = nationalParkData.data.filteredData
-				// console.log(parkList)
 				setNationalParkData(parkList)
-				// console.log(parkList)r
+				// console.log(parkList)
+				// setCampgroundData(parkList.campgrounds)
+				let latList = []
+				let longList = []
+				const campgrounds = parkList.map((park) => {
+					park.campground.map((camp) => {
+						if (typeof camp.latitude === "string") {
+							camp.latitude = parseFloat(camp.latitude)
+						}
+						if (typeof camp.longitude === "string") {
+							camp.longitude = parseFloat(camp.longitude)
+						}
+						longList.push(camp.longitude)
+						latList.push(camp.latitude)
+						return camp
+					})
 
+					return park
+				})
+				let diffLat = { max: Math.max(...latList), min: Math.min(...latList) }
+				let diffLong = {
+					max: Math.max(...longList),
+					min: Math.min(...longList),
+				}
+
+				setNorthMax(diffLat.max)
+				setSouthMax(diffLat.min)
+				setWestMax(diffLong.max)
+				setEastMax(diffLong.min)
+				setCampgroundData(campgrounds)
 				setIsLoading(false)
 				return
 			}
@@ -73,12 +66,21 @@ const App = () => {
 			setErrorFlag(true)
 			setIsLoading(false)
 			console.error("not loading" + error)
+			if (hasError === true) {
+				setMessage(error)
+			}
 		}
 	}
 	useEffect(() => {
-		getCampgrounds()
+		// getCampgrounds()
 		getNationalParks()
 	}, [])
+
+	useEffect(() => {
+		if (isLoading === true) {
+			setMessage("Loading...")
+		}
+	}, [isLoading])
 
 	return (
 		<View style={styles.droidSafeArea}>
@@ -104,8 +106,8 @@ const App = () => {
 							eastMax={eastMax}
 						/>
 					) : (
-						<View style={styles.mapView}>
-							<Text>Loading...</Text>
+						<View style={styles.loadingScreen}>
+							<Text style={styles.loadingMessageText}>{message}</Text>
 						</View>
 					)}
 				</View>
@@ -128,6 +130,15 @@ const styles = StyleSheet.create({
 	},
 	mapView: {
 		height: deviceHeight * 0.82,
+	},
+	loadingScreen: {
+		flexGrow: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		height: deviceHeight * 0.82,
+	},
+	loadingMessageText: {
+		fontSize: 50,
 	},
 })
 export default App
