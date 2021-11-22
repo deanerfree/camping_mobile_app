@@ -17,7 +17,7 @@
   <li>In a folder of your liking git clone <a href='https://github.com/deanerfree/camping_mobile_app'>https://github.com/deanerfree/camping_mobile_app</a></li>
   <li>from console, terminal or command prompt open the folder where the project was cloned and type cd frontend</li>
   <li>type expo install to install proper libraries</li>
-  <li>type expo start to start React app in localhost <strong>run on iOS platform and download <a href="https://expo.dev/client">Expo Go</a></strong> to test on your iOS mobile</li>
+  <li>type expo start to start React app in localhost <strong>**run on iOS platform** and download <a href="https://expo.dev/client">Expo Go</a> to test on your iOS mobile</strong></li>
 </ol>
   <h4>Backend</h4>
 <ol>
