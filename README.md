@@ -8,7 +8,7 @@
     <li>React Native Maps</li>
     <li>Axios</li>
   </ol>
-  <p>API is built using Node.js that is communicating with the NPS data API <a href="https://www.nps.gov/subjects/digital/nps-data-api.htm">Fast API</a></p>
+  <p>API is built using Node.js that is communicating with the <a href="https://www.nps.gov/subjects/digital/nps-data-api.htm">NPS data API</a></p>
   
 <div>
   <h3>To get started</h3>
@@ -21,7 +21,7 @@
 </ol>
   <h4>Backend</h4>
 <ol>
-  <li>From your folder where you cloned the project type cd backend</li>
+  <li>From your folder where you cloned the project type cd backend <a href='https://github.com/deanerfree/camping_mobile_app'>https://github.com/deanerfree/camping_mobile_app</a></li>
   <li>Activate backend virtual environment : source venv/bin/activate</li>
   <li>Install packages: pip3 install -r requirements.txt</li>
   <li>Run the server: uvicorn server.app:app --reload</li>
