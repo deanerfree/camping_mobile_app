@@ -21,33 +21,26 @@
 </ol>
   <h4>Backend</h4>
 <ol>
-  <li>From your folder where you cloned the project type cd backend <a href='https://github.com/deanerfree/camping_mobile_app'>https://github.com/deanerfree/camping_mobile_app</a></li>
-  <li>Activate backend virtual environment : source venv/bin/activate</li>
-  <li>Install packages: pip3 install -r requirements.txt</li>
-  <li>Run the server: uvicorn server.app:app --reload</li>
+  <li>From your folder where you cloned the project type cd backend <a href='https://github.com/deanerfree/camping_server'>Server</a></li>
+  <li>Register with NPS </li>
+  <li>Install packages: npm install</li>
+  <li>Run the server: npm start</li>
   <li>Enjoy!</li>
 </ol>
   <h3>Features</h3>
   <ol>
-    <li>This is a multistep form</li>
-    <li>This was styled using Material UI</li>
-    <li>Items in the form are validated using Formik and Yup</li>
-    <li>Email format is validated using regex</li>
-    <li>The request is sent to a FastAPI server then stored in a mongoDB</li>
-    <li>Server creates a timestamp when entered and updated</li>
-    <li>The users email is the most unique entry so if the email already exists you will be redirected to a new page detailing the error</li>
-    <li>If the request to create a new entry is successful you will be redirected to a success page</li>
-    <li>Successfull server response lets you know when the entry was made and who made it</li>
-    <li>Server is setup for CRUD with the ability to get, get by id, edit, and delete additionally to creating a profile</li>
+    <li>Lists all national park campgrounds in California</li>
+    <li>Can cycle through each park using carousel</li>
+    <li>Each campground is listed and marked with a pin</li>
   </ol>
   </div>
 </div>
 <div>
   <h3>Future Items</h3>
   <ol>
-    <li>Add full CRUD functionality of the app connecting the frontend and backend to allow for get, put, and delete</li>
-    <li>Design elements could be improved</li>
-    <li>Add authentication and some sort of dashboard</li>
+    <li>Search Campground</li>
+    <li>If possible book campground via the app</li>
+    <li>Expand to states outside of california using the API</li>
   </ol>
   </div>
 </div>
