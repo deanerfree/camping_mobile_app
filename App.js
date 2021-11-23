@@ -12,7 +12,7 @@ import {
 import UserMap from "./Screens/UserMap"
 import Header from "./Screens/Header"
 import Footer from "./Screens/Footer"
-import { URL } from ".env"
+import { URL } from "@env"
 
 let deviceWidth = Dimensions.get("window").width
 let deviceHeight = Dimensions.get("window").height
@@ -33,8 +33,9 @@ const App = () => {
 
 	const getNationalParks = async () => {
 		setIsLoading(true)
-		// const url = "http://10.0.0.203:4001/api/v1/parkLocations"
-		const url = URL
+		// const url = "http://localhost:4001/api/v1/parkLocations"
+		// const url = "https://campingapiserver.herokuapp.com/api/v1/parkLocations"
+		const url = `${URL}`
 
 		try {
 			// setIsLoading(true)
@@ -43,12 +44,12 @@ const App = () => {
 			if (nationalParkData.status === 200) {
 				const parkList = nationalParkData.data.filteredData
 				setNationalParkData(parkList)
-				// console.log(parkList)
+
 				// setCampgroundData(parkList.campgrounds)
 
 				let latList = []
 				let longList = []
-				const campgrounds = parkList.map((park) => {
+				const campgrounds = await parkList.map((park) => {
 					park.campground.map((camp) => {
 						if (typeof camp.latitude === "string") {
 							camp.latitude = parseFloat(camp.latitude)
@@ -171,10 +172,11 @@ const App = () => {
 												style={[
 													styles.loadingMessageText,
 													{
-														opacity: translation.interpolate({
+														opacity: translationStyle.interpolate({
 															inputRange: [0, 50, 100],
-															outputRange: [0.2, 1, 0.2],
+															outputRange: [0.5, 1, 0.5],
 														}),
+
 														transform: [
 															{
 																translateY: translationStyle,
