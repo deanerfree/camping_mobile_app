@@ -6,8 +6,9 @@ import {
 	Image,
 	Text,
 	Dimensions,
+	TouchableOpacity,
 } from "react-native"
-import { TouchableOpacity } from "react-native-gesture-handler"
+// import { TouchableOpacity } from "react-native-gesture-handler"
 import TileItem from "./TileItem"
 
 export const SLIDER_WIDTH = Dimensions.get("window").width + 80

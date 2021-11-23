@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from "react"
 import axios from "axios"
-import { StyleSheet, Text, View, StatusBar, Dimensions } from "react-native"
+
+import React, { useState, useEffect, useRef } from "react"
+import {
+	StyleSheet,
+	Text,
+	View,
+	StatusBar,
+	Dimensions,
+	Animated,
+} from "react-native"
 import UserMap from "./Screens/UserMap"
 import Header from "./Screens/Header"
 import Footer from "./Screens/Footer"
+import { URL } from ".env"
 
 let deviceWidth = Dimensions.get("window").width
 let deviceHeight = Dimensions.get("window").height
 const App = () => {
+	const translation = useRef(new Animated.Value(0)).current
+	const translation1 = useRef(new Animated.Value(0)).current
+
 	const [campgroundData, setCampgroundData] = useState([])
 	const [nationalParkData, setNationalParkData] = useState([])
 	const [eastMax, setEastMax] = useState(0)
@@ -17,10 +29,12 @@ const App = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [hasError, setErrorFlag] = useState(false)
 	const [message, setMessage] = useState("")
+	// const [translation, setTranslation] = useState()
 
 	const getNationalParks = async () => {
 		setIsLoading(true)
-		const url = "http://localhost:4001/api/v1/parkLocations"
+		// const url = "http://10.0.0.203:4001/api/v1/parkLocations"
+		const url = URL
 
 		try {
 			// setIsLoading(true)
@@ -31,6 +45,7 @@ const App = () => {
 				setNationalParkData(parkList)
 				// console.log(parkList)
 				// setCampgroundData(parkList.campgrounds)
+
 				let latList = []
 				let longList = []
 				const campgrounds = parkList.map((park) => {
@@ -78,10 +93,37 @@ const App = () => {
 
 	useEffect(() => {
 		if (isLoading === true) {
-			setMessage("Loading...")
+			setMessage("Loading")
 		}
 	}, [isLoading])
 
+	useEffect(() => {
+		Animated.sequence([
+			Animated.timing(translation, {
+				toValue: 3,
+				duration: 1000,
+				useNativeDriver: true,
+			}),
+			Animated.timing(translation, {
+				toValue: -3,
+				duration: 1000,
+				useNativeDriver: true,
+			}),
+		]).start()
+		Animated.sequence([
+			Animated.timing(translation1, {
+				toValue: -3,
+				duration: 1000,
+				useNativeDriver: true,
+			}),
+			Animated.timing(translation1, {
+				toValue: 3,
+				duration: 1000,
+				useNativeDriver: true,
+			}),
+		]).start()
+	}, [])
+	const dots = "..."
 	return (
 		<View style={styles.droidSafeArea}>
 			<View>
@@ -106,9 +148,56 @@ const App = () => {
 							eastMax={eastMax}
 						/>
 					) : (
-						<View style={styles.loadingScreen}>
-							<Text style={styles.loadingMessageText}>{message}</Text>
-						</View>
+						<>
+							{message === "Loading" ? (
+								<View style={styles.loadingScreen}>
+									<Text
+										style={[
+											styles.loadingMessageText,
+											{
+												letterSpacing: 0.1,
+											},
+										]}>
+										{message}
+									</Text>
+									{dots.split("").map((letter, index) => {
+										translationStyle = translation
+										if (index % 2 !== 0) {
+											translationStyle = translation1
+										}
+										return (
+											<Animated.Text
+												key={index * Math.random()}
+												style={[
+													styles.loadingMessageText,
+													{
+														opacity: translation.interpolate({
+															inputRange: [0, 50, 100],
+															outputRange: [0.2, 1, 0.2],
+														}),
+														transform: [
+															{
+																translateY: translationStyle,
+															},
+														],
+													},
+												]}>
+												{letter}
+											</Animated.Text>
+										)
+									})}
+								</View>
+							) : (
+								<View style={styles.loadingScreen}>
+									<Text
+										style={{
+											fontSize: 50,
+										}}>
+										{message}
+									</Text>
+								</View>
+							)}
+						</>
 					)}
 				</View>
 				<View>
@@ -133,12 +222,21 @@ const styles = StyleSheet.create({
 	},
 	loadingScreen: {
 		flexGrow: 1,
+		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
 		height: deviceHeight * 0.82,
 	},
 	loadingMessageText: {
 		fontSize: 50,
+		// transform: [
+		// 	{
+		// 		translateY: fadeAnim.interpolate({
+		// 			inputRange: [0, 1],
+		// 			outputRange: [150, 0],
+		// 		}),
+		// 	},
+		// ],
 	},
 })
 export default App

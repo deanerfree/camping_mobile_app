@@ -10,6 +10,7 @@ import MarkerList from "./MarkerList"
 import Carousel, { Pagination } from "react-native-snap-carousel"
 import { SLIDER_WIDTH, ITEM_WIDTH } from "./Carousel/CampgroundTile"
 import CampgroundTile from "./Carousel/CampgroundTile"
+// import { TouchableOpacity } from "react-native-gesture-handler"
 let deviceWidth = Dimensions.get("window").width
 let deviceHeight = Dimensions.get("window").height
 

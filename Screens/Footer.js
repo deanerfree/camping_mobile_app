@@ -10,11 +10,9 @@ const Footer = () => {
 		return null
 	}
 	return (
-		<TouchableOpacity>
-			<View style={styles.footer}>
-				<Text style={styles.title}>This is the Footer</Text>
-			</View>
-		</TouchableOpacity>
+		<View style={styles.footer}>
+			<Text style={styles.title}>This is the Footer</Text>
+		</View>
 	)
 }
 
